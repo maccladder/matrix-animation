@@ -1,7 +1,10 @@
 "use client";
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 const YellowMatrixAnimation = () => {
+  const router = useRouter();
+
   useEffect(() => {
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
@@ -42,7 +45,56 @@ const YellowMatrixAnimation = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return <canvas id="matrix" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}></canvas>;
+  const handleArrowClick = () => {
+    router.push('/');
+  };
+
+  return (
+    <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+      <canvas id="matrix" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}></canvas>
+      
+      {/* Flèche clignotante */}
+      <div
+        className="blinking-arrow"
+        onClick={handleArrowClick}
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 10,
+          cursor: 'pointer',
+        }}
+      >
+        <div className="arrow-body"></div>
+        <div className="arrow-head"></div>
+      </div>
+
+      <style jsx>{`
+        .arrow-body {
+          width: 150px;
+          height: 20px;
+          background-color: orange;
+          animation: blink 1s infinite;
+        }
+
+        .arrow-head {
+          width: 0;
+          height: 0;
+          border-left: 30px solid orange;
+          border-top: 15px solid transparent;
+          border-bottom: 15px solid transparent;
+          animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
 };
 
 export default YellowMatrixAnimation;
